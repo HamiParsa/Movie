@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Set default background color for the entire page */
+html, body {
+  background-color: #080202;
+}
