@@ -23,8 +23,8 @@ const movies = [
     image: "https://4kwallpapers.com/images/walls/thumbs_3t/22291.jpg",
   },
   {
-    title: "Rick and Morty",
-    image: "https://4kwallpapers.com/images/walls/thumbs_3t/9363.jpg",
+    title: "KPop Demon",
+    image: "https://4kwallpapers.com/images/walls/thumbs_3t/23703.jpg",
   },
   {
     title: "Elemental",
