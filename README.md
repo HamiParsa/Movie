@@ -96,9 +96,5 @@ Perfect for anyone looking to learn and showcase skills in **React**, **Next.js*
 ---
 
 <div align="center">
-  <a href="https://imaginative-granita-28d88b.netlify.app/">
-    <img src="https://img.shields.io/badge/Watch_Now-8b5cf6?style=for-the-badge&logo=popcorntime&logoColor=white"/>
-  </a>
-  <br/><br/>
   <img src="https://skillicons.dev/icons?i=react,next,typescript,tailwind,framer" />
 </div>
