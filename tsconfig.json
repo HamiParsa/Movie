@@ -25,6 +25,6 @@
     
     
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/page.Jsx", "src/components/FancySlider.jsx", "src/components/SpaceBackground.jsx", "src/components/Carousel.jsx", "src/app/movies/[id]/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/page.Jsx", "src/components/FancySlider.jsx", "src/components/SpaceBackground.jsx", "src/components/Carousel.jsx", "src/app/movies/[id]/page.jsx", "src/app/movies/page.jsx"],
   "exclude": ["node_modules"]
 }
