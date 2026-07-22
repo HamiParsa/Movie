@@ -69,7 +69,6 @@ Perfect for anyone looking to learn and showcase skills in **React**, **Next.js*
 </div>
 
 
-
 <div align="center">
   <img src="/pic4.png" width="700px" />
   <br/><br/>
