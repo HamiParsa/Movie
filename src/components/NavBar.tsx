@@ -2,57 +2,111 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BiCameraMovie } from "react-icons/bi";
 import Link from "next/link";
-import { usePathname } from "next/navigation"; 
-import { useNavStore } from "../app/lib/useNavStore";
+import { usePathname } from "next/navigation";
 
-const links = [
+// ============================================================
+// Navigation Links
+// ============================================================
+const LINKS = [
   { name: "Home", href: "/" },
   { name: "Movies", href: "/movies" },
   { name: "About", href: "/about" },
 ];
 
+// ============================================================
+// Navbar Component
+// ============================================================
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname(); 
-  const { activeLink, setActiveLink } = useNavStore();
+  const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
-  
+  // Detect scroll for background change
   useEffect(() => {
-    const current = links.find((l) => l.href === pathname);
-    if (current) {
-      setActiveLink(current.name);
-    }
-  }, [pathname, setActiveLink]);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Lock body scroll on mobile
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
+
+  // Close menu on Escape
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) setIsOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen]);
+
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   return (
-    <nav className="fixed w-full top-0 left-0 z-50 bg-black/30 backdrop-blur-lg shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <motion.nav
+      initial={{ y: -20, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className={`
+        fixed top-0 left-0 w-full z-50 px-4 py-4 transition-all duration-500
+        ${scrolled || isOpen
+          ? "bg-black/60 backdrop-blur-xl border-b border-white/5"
+          : "bg-transparent"
+        }
+      `}
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        {/* ============================================================
+            Logo - Just text with dot
+            ============================================================ */}
         <Link
           href="/"
-          className="text-white text-3xl font-extrabold tracking-wide cursor-pointer flex"
+          className="group flex items-center gap-2"
+          aria-label="Homepage"
         >
-          Movie
-          <BiCameraMovie className="mt-1 ml-1" />
+          <span className="text-2xl font-light tracking-widest text-white">
+            <span className="font-bold">✦</span> CINE
+          </span>
+          <span className="text-white/20 text-xs tracking-[0.3em] group-hover:text-white/40 transition-colors">
+            / STUDIO
+          </span>
         </Link>
 
-        <ul className="hidden md:flex space-x-8">
-          {links.map((link) => (
+        {/* ============================================================
+            Desktop Navigation - Clean & Simple
+            ============================================================ */}
+        <ul className="hidden md:flex items-center gap-8">
+          {LINKS.map((link) => (
             <li key={link.name} className="relative">
               <Link
                 href={link.href}
-                className={`text-white font-medium flex items-center transition-colors duration-300 ${
-                  activeLink === link.name ? "text-yellow-400" : ""
-                }`}
+                className={`
+                  text-sm tracking-wide transition-all duration-300
+                  ${isActive(link.href)
+                    ? "text-white"
+                    : "text-white/40 hover:text-white/80"
+                  }
+                `}
               >
                 {link.name}
               </Link>
 
-              {activeLink === link.name && (
+              {/* Simple dot indicator */}
+              {isActive(link.href) && (
                 <motion.div
-                  layoutId="underline"
-                  className="absolute bottom-[-4px] left-0 w-full h-1 bg-yellow-400 rounded"
+                  layoutId="dot"
+                  className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white"
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 />
               )}
@@ -60,54 +114,92 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <div className="md:hidden">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-white focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? "✖" : "☰"}
-          </button>
-        </div>
+        {/* ============================================================
+            Mobile Toggle - Simple lines
+            ============================================================ */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
+        >
+          <motion.span
+            animate={{
+              rotate: isOpen ? 45 : 0,
+              y: isOpen ? 5 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="w-5 h-[1.5px] bg-white rounded-full block"
+          />
+          <motion.span
+            animate={{
+              opacity: isOpen ? 0 : 1,
+              width: isOpen ? 0 : "70%",
+            }}
+            transition={{ duration: 0.3 }}
+            className="h-[1.5px] bg-white/60 rounded-full block"
+          />
+          <motion.span
+            animate={{
+              rotate: isOpen ? -45 : 0,
+              y: isOpen ? -5 : 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="w-5 h-[1.5px] bg-white rounded-full block"
+          />
+        </button>
       </div>
 
+      {/* ============================================================
+          Mobile Menu - Clean overlay
+          ============================================================ */}
       <AnimatePresence>
         {isOpen && (
-          <motion.ul
+          <motion.div
+            id="mobile-menu"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-black/70 backdrop-blur-lg text-white flex flex-col space-y-4 px-6 py-4 overflow-hidden"
+            transition={{
+              duration: 0.4,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="md:hidden overflow-hidden"
           >
-            {links.map((link) => (
-              <li key={link.name} className="relative">
-                <Link
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`block font-medium w-full text-left ${
-                    activeLink === link.name ? "text-yellow-400" : ""
-                  }`}
-                >
-                  {link.name}
-                </Link>
-
-                {activeLink === link.name && (
-                  <motion.div
-                    layoutId="underline"
-                    className="absolute bottom-0 left-0 w-full h-[2px] bg-yellow-400"
-                    transition={{
-                      type: "spring",
-                      stiffness: 500,
-                      damping: 30,
-                    }}
-                  />
-                )}
-              </li>
-            ))}
-          </motion.ul>
+            <div className="pt-6 pb-4 border-t border-white/5 mt-3">
+              <ul className="flex flex-col gap-1">
+                {LINKS.map((link, i) => (
+                  <motion.li
+                    key={link.name}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`
+                        flex items-center justify-between py-3 px-2 rounded-lg
+                        transition-all duration-300
+                        ${isActive(link.href)
+                          ? "text-white bg-white/5"
+                          : "text-white/40 hover:text-white hover:bg-white/5"
+                        }
+                      `}
+                    >
+                      <span className="text-base tracking-wide">{link.name}</span>
+                      <span className="text-xs text-white/10">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }
