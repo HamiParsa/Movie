@@ -1,231 +1,278 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FreeMode, Navigation } from "swiper/modules";
+import { FreeMode, Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import { FaArrowTrendUp } from "react-icons/fa6";
+import { motion, AnimatePresence } from "framer-motion";
 
-const movies = [
+// ============================================================
+// Movie Data
+// ============================================================
+const MOVIES = [
   {
     id: 1,
-    title: "Wanka",
+    title: "Wonka",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/wonka_hjmhe2tk_500x749.jpg?v=1703001703",
+    year: "2023",
+    genre: "Fantasy",
   },
   {
     id: 2,
-    title: "We Life In Time",
+    title: "We Live In Time",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/we-live-in-time_dfvsiaix_500x749.jpg?v=1740687984",
+    year: "2024",
+    genre: "Drama",
   },
   {
     id: 3,
     title: "Furiosa",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/furiosa-a-mad-max-saga_8mwswrhb-_1_500x749.jpg?v=1707785008",
+    year: "2024",
+    genre: "Action",
   },
   {
     id: 4,
     title: "Inside Out 2",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/inside-out-2_g44lec92_500x749.jpg?v=1722282562",
+    year: "2024",
+    genre: "Animation",
   },
   {
     id: 5,
     title: "Venom",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/venom-the-last-dance_90m5c26k_500x749.jpg?v=1718373670",
+    year: "2024",
+    genre: "Action",
   },
   {
     id: 6,
     title: "Moana 2",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/moana-2_h5f8f8rg_500x749.jpg?v=1728070136",
+    year: "2024",
+    genre: "Animation",
   },
   {
     id: 7,
     title: "The Wild Robot",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/wild_robot_500x749.jpg?v=1710787263",
+    year: "2024",
+    genre: "Sci-Fi",
   },
   {
     id: 8,
     title: "Deadpool & Wolverine",
     poster:
       "https://cdn.shopify.com/s/files/1/0057/3728/3618/files/deadpool-wolverine_866a70e7-fb48-4f35-a44b-41594691ac76_500x749.jpg?v=1724680738",
+    year: "2024",
+    genre: "Comedy",
   },
 ];
 
-function SnakeBorderBox({ children }) {
-  return (
-    <div className="relative w-full max-w-7xl mx-auto p-4 rounded-md">
-      {/* Snake Border */}
-      <h1 className="flex justify-center text-center text-2xl w-full text-white">
-        Trending Now  <FaArrowTrendUp className="ml-1 mt-1" />{" "}
-      </h1>
-      <br />
-      <div className="absolute inset-0 pointer-events-none">
-        <svg className="w-full h-full">
-          <defs>
-            <linearGradient
-              id="rainbowGradient"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="0%"
-            >
-              <stop offset="0%" stopColor="red">
-                <animate
-                  attributeName="stop-color"
-                  values="red;lime;blue;red"
-                  dur="6s"
-                  repeatCount="indefinite"
-                />
-              </stop>
-              <stop offset="50%" stopColor="lime">
-                <animate
-                  attributeName="stop-color"
-                  values="lime;blue;red;lime"
-                  dur="6s"
-                  repeatCount="indefinite"
-                />
-              </stop>
-              <stop offset="100%" stopColor="blue">
-                <animate
-                  attributeName="stop-color"
-                  values="blue;red;lime;blue"
-                  dur="6s"
-                  repeatCount="indefinite"
-                />
-              </stop>
-            </linearGradient>
-          </defs>
-          <rect
-            x="2"
-            y="2"
-            width="calc(100% - 4px)"
-            height="calc(100% - 4px)"
-            fill="none"
-            stroke="url(#rainbowGradient)"
-            strokeWidth="4"
-            rx="6"
-          />
-        </svg>
-      </div>
-      <div className="relative z-10">{children}</div>
-    </div>
-  );
-}
-
-export default function UltraPremiumHoverCarousel() {
+// ============================================================
+// Trending Movies Component
+// ============================================================
+export default function TrendingMovies() {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const swiperRef = useRef(null);
 
   return (
-    <div className="w-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px] flex items-center justify-center bg-black p-4 md:p-8">
-      <SnakeBorderBox>
-        <Swiper
-          modules={[FreeMode, Navigation]}
-          freeMode={true}
-          grabCursor={true}
-          slidesPerView={1}
-          spaceBetween={10}
-          breakpoints={{
-            320: { slidesPerView: 1, spaceBetween: 10 },
-            480: { slidesPerView: 1.5, spaceBetween: 12 },
-            640: { slidesPerView: 2, spaceBetween: 15 },
-            768: { slidesPerView: 2.5, spaceBetween: 18 },
-            1024: { slidesPerView: 3.5, spaceBetween: 20 },
-            1280: { slidesPerView: 4, spaceBetween: 25 },
-            1536: { slidesPerView: 5, spaceBetween: 30 },
-          }}
-          navigation={{
-            prevEl: ".custom-prev",
-            nextEl: ".custom-next",
-          }}
-          className="relative z-10"
-        >
-          {movies.map((movie, index) => (
-            <SwiperSlide key={movie.id}>
-              <div
-                className="relative transition-transform duration-500 group"
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <div className="relative overflow-hidden rounded-sm">
-                  <img
-                    src={movie.poster}
-                    alt={movie.title}
-                    className={`w-full aspect-[2/3] object-cover rounded-sm shadow-lg transition-all duration-500
-                      ${
-                        hoveredIndex === index
-                          ? "scale-110 shadow-[0_0_30px_rgba(0,255,255,0.7)]"
-                          : ""
-                      }`}
-                  />
-
-                  
-                  {hoveredIndex === index && (
-                    <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white/20 to-transparent animate-scan pointer-events-none"></span>
-                  )}
-                </div>
-
-               
-                {hoveredIndex === index && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm rounded-sm">
-                    <p className="text-white font-bold text-lg md:text-xl text-center animate-typing whitespace-nowrap overflow-hidden border-r-2 border-white/70 pr-2">
-                      {movie.title}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        {/* Arrow Indicators سفید */}
-        <div className="custom-prev absolute left-2 top-1/2 -translate-y-1/2 text-white text-3xl opacity-80 cursor-pointer z-20">
-          &#10094;
-        </div>
-        <div className="custom-next absolute right-2 top-1/2 -translate-y-1/2 text-white text-3xl opacity-80 cursor-pointer z-20">
-          &#10095;
-        </div>
-      </SnakeBorderBox>
-
+    <section className="w-full py-12 md:py-16 lg:py-20 bg-black relative overflow-hidden">
       
-      <style jsx>{`
-        .animate-typing {
-          width: 0;
-          animation: typing 2s steps(20, end) forwards,
-            blink 0.8s step-end infinite;
-        }
-        @keyframes typing {
-          from {
-            width: 0;
-          }
-          to {
-            width: 100%;
-          }
-        }
-        @keyframes blink {
-          50% {
-            border-color: transparent;
-          }
-        }
-        .animate-scan {
-          animation: scan 2s linear infinite;
-        }
-        @keyframes scan {
-          0% {
-            transform: translateY(-100%);
-          }
-          100% {
-            transform: translateY(100%);
-          }
-        }
-      `}</style>
-    </div>
+      {/* ============================================================
+          Background Glow
+          ============================================================ */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-8">
+        
+        {/* ============================================================
+            Header
+            ============================================================ */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="flex items-center justify-between mb-8 md:mb-12"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-6 bg-yellow-500 rounded-full" />
+            <h2 className="text-white text-2xl md:text-3xl font-bold tracking-tight">
+              Trending Now
+            </h2>
+            <FaArrowTrendUp className="text-yellow-500 text-xl md:text-2xl animate-pulse" />
+          </div>
+          
+          <div className="flex items-center gap-2 text-white/20 text-sm">
+            <span className="hidden md:inline">Discover</span>
+            <span className="text-yellow-500/40">→</span>
+          </div>
+        </motion.div>
+
+        {/* ============================================================
+            Carousel
+            ============================================================ */}
+        <div className="relative">
+          
+          <Swiper
+            modules={[FreeMode, Navigation, Autoplay]}
+            freeMode={{
+              enabled: true,
+              sticky: true,
+            }}
+            grabCursor={true}
+            slidesPerView="auto"
+            spaceBetween={16}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            navigation={{
+              prevEl: ".custom-prev",
+              nextEl: ".custom-next",
+            }}
+            loop={true}
+            onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+            onSwiper={(swiper) => (swiperRef.current = swiper)}
+            className="w-full"
+          >
+            {MOVIES.map((movie, index) => (
+              <SwiperSlide key={movie.id} className="!w-[160px] md:!w-[200px]">
+                <motion.div
+                  className="relative group cursor-pointer"
+                  onMouseEnter={() => setHoveredIndex(index)}
+                  onMouseLeave={() => setHoveredIndex(null)}
+                  whileHover={{ y: -8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* ============================================================
+                      Poster
+                      ============================================================ */}
+                  <div className="relative rounded-xl overflow-hidden shadow-lg">
+                    <img
+                      src={movie.poster}
+                      alt={movie.title}
+                      className="w-full aspect-[2/3] object-cover transition-all duration-500"
+                      loading="lazy"
+                    />
+
+                    {/* Hover Glow */}
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ 
+                        opacity: hoveredIndex === index ? 1 : 0,
+                      }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute inset-0 bg-gradient-to-t from-yellow-500/20 via-transparent to-transparent"
+                    />
+
+                    {/* Scan Line Effect */}
+                    {hoveredIndex === index && (
+                      <motion.div
+                        animate={{ y: ["-100%", "100%"] }}
+                        transition={{ 
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                        className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-white/10 to-transparent pointer-events-none"
+                      />
+                    )}
+                  </div>
+
+                  {/* ============================================================
+                      Title Overlay on Hover
+                      ============================================================ */}
+                  <AnimatePresence>
+                    {hoveredIndex === index && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm rounded-xl"
+                      >
+                        <div className="text-center px-4">
+                          <p className="text-white font-bold text-sm md:text-base">
+                            {movie.title}
+                          </p>
+                          <p className="text-white/40 text-xs mt-1">
+                            {movie.year} • {movie.genre}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* ============================================================
+                      Active Indicator
+                      ============================================================ */}
+                  {activeIndex === index && (
+                    <motion.div
+                      layoutId="active-dot"
+                      className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-lg shadow-yellow-500/50"
+                    />
+                  )}
+                </motion.div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+          {/* ============================================================
+              Navigation Arrows
+              ============================================================ */}
+          <button 
+            className="custom-prev absolute -left-3 md:-left-5 top-1/2 -translate-y-1/2 z-20 text-white/20 hover:text-white/60 text-3xl md:text-4xl transition-all hover:scale-110 hidden md:block"
+            aria-label="Previous"
+          >
+            ‹
+          </button>
+          <button 
+            className="custom-next absolute -right-3 md:-right-5 top-1/2 -translate-y-1/2 z-20 text-white/20 hover:text-white/60 text-3xl md:text-4xl transition-all hover:scale-110 hidden md:block"
+            aria-label="Next"
+          >
+            ›
+          </button>
+
+        </div>
+
+        {/* ============================================================
+            Pagination Dots
+            ============================================================ */}
+        <div className="flex justify-center items-center gap-2 mt-8">
+          {MOVIES.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => swiperRef.current?.slideTo(index)}
+              className={`
+                transition-all duration-500 rounded-full
+                ${activeIndex === index 
+                  ? "w-6 h-1.5 bg-yellow-500 shadow-lg shadow-yellow-500/30" 
+                  : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
+                }
+              `}
+              aria-label={`Slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+      </div>
+    </section>
   );
 }
