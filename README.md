@@ -91,7 +91,7 @@ Perfect for anyone looking to learn and showcase skills in **React**, **Next.js*
 ## 👨‍💻 Author
 
 **Developed by:** [Hami Parsa](https://github.com/hamiparsa)  
-💬 Front-End Developer | Building creative, animated, and user-friendly web experiences  
+💬 Full-Stack Developer | Building creative, animated, and user-friendly web experiences  
 
 ---
 
