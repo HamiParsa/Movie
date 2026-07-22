@@ -73,7 +73,6 @@ Perfect for anyone looking to learn and showcase skills in **React**, **Next.js*
 </div>
 
 
-
 ---
 
 ## 🧩 Future Improvements
