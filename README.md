@@ -1,7 +1,7 @@
 <div align="center">
   <h1>🎬 Movie Explorer</h1>
   <p>Discover, Explore, and Enjoy your favorite movies in style 🍿</p>
-  <a href="https://imaginative-granita-28d88b.netlify.app/">
+  <a href="https://hamiparsa.github.io/Movie/">
     <img src="https://img.shields.io/badge/View_Live_Project-000?style=for-the-badge&logo=netlify&logoColor=white"/>
   </a>
 </div>
