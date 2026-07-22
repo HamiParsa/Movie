@@ -1,9 +1,10 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,        
-  images: {
-    domains: ["m.media-amazon.com"],           
-  },
-}
+import type { NextConfig } from "next";
 
-export default nextConfig
+const nextConfig: NextConfig = {
+  trailingSlash: true,    // ensures pages like /about/ exist
+  images: {
+    unoptimized: true,    // disable Next.js Image Optimization
+  },
+};
+
+export default nextConfig;
