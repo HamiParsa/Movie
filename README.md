@@ -8,7 +8,6 @@
 
 
 
-
 <div align="center">
   <h1>🎬 Movie Explorer</h1>
   <p>Discover, Explore, and Enjoy your favorite movies in style 🍿</p>
